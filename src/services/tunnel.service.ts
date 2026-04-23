@@ -187,9 +187,16 @@ export class TunnelService {
         if (!host) return null;
         const hostname = host.split(':')[0]!;
         const rootDomain = process.env.ROOT_DOMAIN;
-        if (rootDomain && hostname === rootDomain) return null;
-        const parts = hostname.split('.');
-        if (parts.length < 2) return null;
-        return parts[0] || null;
+        if (!rootDomain) {
+            const parts = hostname.split('.');
+            if (parts.length < 2) return null;
+            return parts[0] || null;
+        }
+        if (hostname === rootDomain) return null;
+        const suffix = `.${rootDomain}`;
+        if (!hostname.endsWith(suffix)) return null;
+        const sub = hostname.slice(0, -suffix.length);
+        if (!sub || sub.includes('.')) return null;
+        return sub;
     }
 }
