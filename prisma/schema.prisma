@@ -1,23 +1,31 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  apiKeyHash String
-  createdAt  DateTime @default(now())
-  tunnels    Tunnel[]
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  apiKeyHash   String
+  passwordHash String
+  passwordSalt String
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  tunnels      Tunnel[]
 }
 
 model Tunnel {
   id              String       @id @default(cuid())
-  subdomain       String       @unique
-  userId          String
+  userId          Int
   authToken       String
   status          String       @default("inactive")
   createdAt       DateTime     @default(now())
@@ -35,6 +43,7 @@ model RequestLog {
   path       String
   statusCode Int
   durationMs Int
+  rawRequest String
   timestamp  DateTime @default(now())
   tunnel     Tunnel   @relation(fields: [tunnelId], references: [id], onDelete: Cascade)
 

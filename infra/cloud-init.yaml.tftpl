@@ -1,0 +1,62 @@
+#cloud-config
+users:
+  - name: ${ssh_user}
+    groups: [sudo, docker]
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_pubkey}
+
+package_update: true
+package_upgrade: true
+packages:
+  - ca-certificates
+  - curl
+  - git
+  - gnupg
+
+write_files:
+  - path: /opt/gateway/.env
+    permissions: "0600"
+    encoding: b64
+    content: ${env_file_b64}
+  - path: /opt/gateway/sa.json.b64
+    permissions: "0600"
+    content: ${sa_json_b64}
+  - path: /etc/systemd/system/mcp-gateway.service
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=MCP Gateway (docker compose)
+      Requires=docker.service
+      After=docker.service network-online.target
+      [Service]
+      Type=oneshot
+      RemainAfterExit=yes
+      WorkingDirectory=/opt/gateway/deploy
+      EnvironmentFile=/opt/gateway/.env
+      ExecStart=/usr/bin/docker compose --env-file /opt/gateway/.env up -d --build
+      ExecStop=/usr/bin/docker compose down
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - chmod a+r /etc/apt/keyrings/docker.gpg
+  - |
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - systemctl enable --now docker
+  - |
+    if [ -n "${repo_url}" ]; then
+      git clone --depth=1 --branch ${repo_ref} ${repo_url} /opt/gateway/app
+      mkdir -p /opt/gateway/deploy
+      cp -r /opt/gateway/app/deploy/. /opt/gateway/deploy/
+      base64 -d /opt/gateway/sa.json.b64 > /opt/gateway/deploy/sa.json
+      chmod 600 /opt/gateway/deploy/sa.json
+      rm -f /opt/gateway/sa.json.b64
+      systemctl daemon-reload
+      systemctl enable --now mcp-gateway.service
+    fi

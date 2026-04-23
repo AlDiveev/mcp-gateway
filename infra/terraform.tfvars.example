@@ -1,0 +1,20 @@
+project_id        = "sixth-hawk-434814-q8"
+region            = "us-central1"
+zone              = "us-central1-a"
+
+base_domain       = "mcp-gateway.info"
+dns_zone_name     = "mcp-gateway-info"
+
+acme_email        = "a.a.diveev@gmail.com"
+
+admin_email       = "admin@admin.com"
+admin_password    = "admin"
+
+machine_type      = "e2-micro"
+disk_size_gb      = 30
+
+app_repo_url      = ""
+app_repo_ref      = "main"
+
+ssh_user          = "ops"
+ssh_pubkey        = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHdxETWOiM4E7kGDDoNw8zq6rR6ZYA2UkP5zAcXrSpA4 a.a.diveev@gmail.com"
