@@ -1,14 +1,8 @@
 import type { CreateTunnelDto, Tunnel, TunnelStatus } from '../types/tunnel';
 
 import { randomBytes, randomUUID } from 'crypto';
-import type { IncomingMessage } from 'http';
-import { createServer as createHttpsServer } from 'https';
+import type { IncomingMessage, Server as HttpServer } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
-
-export interface TunnelTlsOptions {
-    key: Buffer | string;
-    cert: Buffer | string;
-}
 
 export interface TunnelHttpRequest {
     method: string;
@@ -51,23 +45,25 @@ export class TunnelService {
     private readonly pending = new Map<string, PendingRequest>();
     private readonly requestTimeoutMs: number;
 
-    private constructor(private readonly repo: TunnelRepository, wsPort: number, requestTimeoutMs: number, tls?: TunnelTlsOptions) {
-        if (tls) {
-            const httpsServer = createHttpsServer({ key: tls.key, cert: tls.cert });
-            this.ws = new WebSocketServer({ server: httpsServer });
-            httpsServer.listen(wsPort);
-        } else {
-            this.ws = new WebSocketServer({ port: wsPort });
-        }
+    private constructor(private readonly repo: TunnelRepository, requestTimeoutMs: number) {
+        this.ws = new WebSocketServer({ noServer: true });
         this.ws.on('connection', (ws, req) => this.handleConnection(ws, req));
         this.requestTimeoutMs = requestTimeoutMs;
     }
 
-    static getInstance(repo: TunnelRepository, wsPort = 3001, requestTimeoutMs = 30_000, tls?: TunnelTlsOptions): TunnelService {
+    static getInstance(repo: TunnelRepository, requestTimeoutMs = 30_000): TunnelService {
         if (!TunnelService.instance) {
-            TunnelService.instance = new TunnelService(repo, wsPort, requestTimeoutMs, tls);
+            TunnelService.instance = new TunnelService(repo, requestTimeoutMs);
         }
         return TunnelService.instance;
+    }
+
+    attach(server: HttpServer): void {
+        server.on('upgrade', (req, socket, head) => {
+            this.ws.handleUpgrade(req, socket, head, (ws) => {
+                this.ws.emit('connection', ws, req);
+            });
+        });
     }
 
     async create(userId: number, _dto: CreateTunnelDto): Promise<Tunnel> {

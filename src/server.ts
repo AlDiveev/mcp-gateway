@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { randomBytes } from 'crypto';
-import fs from 'node:fs';
 import http from 'node:http';
-import https from 'node:https';
 import { createApp } from './app';
 import config from './config/config';
 import { TunnelController } from './controllers/tunnel.controller';
@@ -23,10 +21,7 @@ const prisma = new PrismaClient({ adapter });
 const userRepo = new PrismaUserRepository(prisma);
 const tunnelRepo = new PrismaTunnelRepository(prisma);
 const requestLogRepo = new PrismaRequestLogRepository(prisma);
-const tunnelTls = config.tlsKeyPath && config.tlsCertPath
-  ? { key: fs.readFileSync(config.tlsKeyPath), cert: fs.readFileSync(config.tlsCertPath) }
-  : undefined;
-const tunnelService = TunnelService.getInstance(tunnelRepo, config.wsPort, 30_000, tunnelTls);
+const tunnelService = TunnelService.getInstance(tunnelRepo);
 
 const authService = {
   verifyApiKey: async (key: string) => {
@@ -70,25 +65,11 @@ async function ensureAdminUser(): Promise<void> {
   });
 }
 
-function createServer() {
-  if (config.tlsKeyPath && config.tlsCertPath) {
-    return https.createServer(
-      {
-        key: fs.readFileSync(config.tlsKeyPath),
-        cert: fs.readFileSync(config.tlsCertPath),
-      },
-      app,
-    );
-  }
-  return http.createServer(app);
-}
-
 ensureAdminUser().then(() => {
-  const server = createServer();
-  const scheme = config.tlsKeyPath && config.tlsCertPath ? 'https' : 'http';
+  const server = http.createServer(app);
+  tunnelService.attach(server);
   server.listen(config.port, () => {
-    console.log(`Gateway ${scheme.toUpperCase()} on port ${config.port}`);
-    console.log(`Gateway WS   on port ${tunnelService.ws.options.port}`);
+    console.log(`Gateway HTTP+WS on port ${config.port}`);
     console.log(`Admin seeded: ${ADMIN_EMAIL}`);
   });
 });
