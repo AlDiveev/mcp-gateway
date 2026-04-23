@@ -25,13 +25,15 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      WS_PORT: 3001
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      PUBLIC_URL: https://${BASE_DOMAIN}
-      WS_PUBLIC_URL: wss://${BASE_DOMAIN}
+      PUBLIC_URL: http://${BASE_DOMAIN}:3000
+      WS_PUBLIC_URL: ws://${BASE_DOMAIN}:3001
       ADMIN_EMAIL: ${ADMIN_EMAIL}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     ports:
-      - "80:3000"
+      - "3000:3000"
+      - "3001:3001"
 
 volumes:
   pgdata:

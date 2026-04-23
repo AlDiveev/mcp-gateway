@@ -64,7 +64,7 @@ resource "google_compute_firewall" "web" {
   network = "default"
   allow {
     protocol = "tcp"
-    ports    = ["80", "443"]
+    ports    = ["80", "443", "3000", "3001"]
   }
   source_ranges = ["0.0.0.0/0"]
   target_tags   = [var.vm_name]

@@ -21,7 +21,7 @@ const prisma = new PrismaClient({ adapter });
 const userRepo = new PrismaUserRepository(prisma);
 const tunnelRepo = new PrismaTunnelRepository(prisma);
 const requestLogRepo = new PrismaRequestLogRepository(prisma);
-const tunnelService = TunnelService.getInstance(tunnelRepo);
+const tunnelService = TunnelService.getInstance(tunnelRepo, config.wsPort);
 
 const authService = {
   verifyApiKey: async (key: string) => {
@@ -67,9 +67,9 @@ async function ensureAdminUser(): Promise<void> {
 
 ensureAdminUser().then(() => {
   const server = http.createServer(app);
-  tunnelService.attach(server);
   server.listen(config.port, () => {
-    console.log(`Gateway HTTP+WS on port ${config.port}`);
+    console.log(`Gateway HTTP on port ${config.port}`);
+    console.log(`Gateway WS   on port ${config.wsPort}`);
     console.log(`Admin seeded: ${ADMIN_EMAIL}`);
   });
 });
