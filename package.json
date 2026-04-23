@@ -24,13 +24,13 @@
     "nodemon": "^3.1.14",
     "npm": "^11.12.1",
     "prettier": "^3.8.3",
-    "prisma": "^7.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "prisma": "^7.7.0",
     "ws": "^8.20.0",
     "zod": "^4.3.6"
   }
