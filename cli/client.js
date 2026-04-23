@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const http = require('http');
 const https = require('https');
 const readline = require('readline');
 const WebSocket = require('ws');
 
-const GATEWAY_URL = process.env.GATEWAY_URL ?? 'https://localhost:3000';
-const CREDENTIALS_FILE = path.join(__dirname, '.credentials.json');
+const GATEWAY_URL = process.env.GATEWAY_URL ?? 'https://mcp-gateway.info';
+const CONFIG_DIR = process.env.MCP_GATEWAY_HOME ?? path.join(os.homedir(), '.mcp-gateway');
+const CREDENTIALS_FILE = path.join(CONFIG_DIR, 'credentials.json');
 
 try {
   const gwHost = new URL(GATEWAY_URL).hostname;
@@ -42,6 +44,7 @@ function loadCredentials() {
 }
 
 function saveCredentials(data) {
+  fs.mkdirSync(CONFIG_DIR, { recursive: true, mode: 0o700 });
   fs.writeFileSync(CREDENTIALS_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
 }
 
@@ -304,12 +307,15 @@ async function main() {
 
   if (!command) {
     console.log(`Usage:
-  node cli/client.js <command> [options]
+  mcp-gw <command> [options]
 
 Commands:
   create [--target <url>]       Register (if needed) and open tunnel
-  list                          List tunnels
-  whoami                        Show stored credentials`);
+  whoami                        Show stored credentials
+
+Env:
+  GATEWAY_URL                   Gateway base URL (default: https://mcp-gateway.info)
+  MCP_GATEWAY_HOME              Config dir (default: ~/.mcp-gateway)`);
     process.exit(0);
   }
 

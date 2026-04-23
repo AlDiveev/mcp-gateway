@@ -1,0 +1,27 @@
+{
+  "name": "@alexdive/mcp-gw",
+  "version": "0.1.0",
+  "description": "CLI client for MCP Gateway — expose your local MCP server behind a public HTTPS URL.",
+  "bin": {
+    "mcp-gw": "client.js"
+  },
+  "main": "client.js",
+  "files": [
+    "client.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.20.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "tunnel",
+    "gateway",
+    "claude",
+    "cli"
+  ],
+  "license": "MIT"
+}

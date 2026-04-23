@@ -88,14 +88,233 @@
     .login-card { width: 100%; max-width: 380px; background: #11141a; border: 1px solid #1f2329; border-radius: 14px; padding: 28px; }
     .login-card .logo { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--brand), #8b5cf6); display: grid; place-items: center; color: #fff; margin-bottom: 16px; }
 
+    .landing-nav {
+      position: sticky; top: 0; z-index: 30;
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 32px; background: rgba(11,13,16,.8); backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1f2329;
+    }
+    .landing-nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .landing-nav .brand .logo { width: 30px; height: 30px; border-radius: 7px; background: linear-gradient(135deg, var(--brand), #8b5cf6); display: grid; place-items: center; color: #fff; }
+    .landing-nav .links { display: flex; gap: 20px; margin-left: 32px; }
+    .landing-nav .links a { color: #9ca3af; text-decoration: none; font-size: 14px; }
+    .landing-nav .links a:hover { color: #e5e7eb; }
+
+    .hero {
+      padding: 96px 32px 72px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(99,102,241,.18), transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 30%, rgba(139,92,246,.12), transparent 70%);
+      border-bottom: 1px solid #1f2329;
+    }
+    .hero .eyebrow { display: inline-block; padding: 4px 12px; border-radius: 999px; background: rgba(99,102,241,.12); color: #a5b4fc; font-size: 12px; font-weight: 500; margin-bottom: 20px; border: 1px solid rgba(99,102,241,.25); }
+    .hero h1 { font-size: 56px; font-weight: 700; line-height: 1.08; margin: 0 auto 20px; max-width: 860px; letter-spacing: -.02em; }
+    .hero h1 .grad { background: linear-gradient(135deg, #a5b4fc, #c4b5fd); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p.lead { font-size: 18px; color: #9ca3af; max-width: 640px; margin: 0 auto 32px; line-height: 1.55; }
+    .hero .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero .btn-primary { background: linear-gradient(135deg, var(--brand), #8b5cf6); border: 0; padding: 12px 24px; font-weight: 500; }
+    .hero .btn-primary:hover { filter: brightness(1.1); }
+
+    .section { padding: 72px 32px; max-width: 1120px; margin: 0 auto; }
+    .section h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; letter-spacing: -.01em; }
+    .section p.sub { color: #9ca3af; font-size: 16px; margin-bottom: 40px; }
+
+    .feature { background: #11141a; border: 1px solid #1f2329; border-radius: 12px; padding: 24px; height: 100%; transition: border-color .2s, transform .2s; }
+    .feature:hover { border-color: rgba(99,102,241,.4); transform: translateY(-2px); }
+    .feature .icon-box { width: 40px; height: 40px; border-radius: 10px; background: rgba(99,102,241,.12); color: #a5b4fc; display: grid; place-items: center; font-size: 20px; margin-bottom: 14px; }
+    .feature h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .feature p { color: #9ca3af; font-size: 14px; line-height: 1.55; margin: 0; }
+
+    .code-block { background: #0b0d10; border: 1px solid #1f2329; border-radius: 10px; padding: 18px 20px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 13px; line-height: 1.6; color: #d1d5db; text-align: left; white-space: pre; overflow-x: auto; margin: 0; tab-size: 2; }
+    .code-block .c-dim { color: #6b7280; }
+    .code-block .c-brand { color: #a5b4fc; }
+
+    .video-wrap { max-width: 920px; margin: 0 auto; border-radius: 14px; overflow: hidden; border: 1px solid #1f2329; background: #0b0d10; box-shadow: 0 20px 60px rgba(99,102,241,.08); }
+    .video-wrap .ratio-16x9 { position: relative; padding-top: 56.25%; }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    .os-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+    .os-tabs button {
+      background: #11141a; border: 1px solid #1f2329; color: #9ca3af;
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all .15s;
+    }
+    .os-tabs button:hover { color: #e5e7eb; border-color: #2a2f38; }
+    .os-tabs button.active { background: rgba(99,102,241,.12); border-color: rgba(99,102,241,.4); color: #c7d2fe; }
+    .os-panel { display: none; }
+    .os-panel.active { display: block; }
+
+    .landing-footer { border-top: 1px solid #1f2329; padding: 24px 32px; text-align: center; color: #6b7280; font-size: 13px; }
+
     .spinner { width: 14px; height: 14px; border: 2px solid #374151; border-top-color: #a5b4fc; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
+<!-- LANDING -->
+<div id="landingView">
+  <nav class="landing-nav">
+    <div class="brand">
+      <div class="logo"><i class="bi bi-hdd-network"></i></div>
+      <span>MCP Gateway</span>
+    </div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="#quickstart">Quickstart</a>
+    </div>
+    <div class="ms-auto">
+      <button id="navLoginBtn" class="btn btn-primary btn-sm px-3">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Sign in
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <span class="eyebrow"><i class="bi bi-lightning-charge-fill me-1"></i> Tunnels for MCP servers</span>
+    <h1>Put your MCP server <span class="grad">online in seconds</span></h1>
+    <p class="lead">MCP Gateway gives your local Model Context Protocol server a stable public URL. Plug it into Claude, ChatGPT, or any MCP client — no firewall, no DNS, no reverse proxy.</p>
+    <div class="cta">
+      <button id="heroLoginBtn" class="btn btn-primary btn-lg">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Sign in to console
+      </button>
+      <a href="#quickstart" class="btn btn-ghost btn-lg">
+        <i class="bi bi-terminal me-2"></i> Quickstart
+      </a>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="section">
+    <h2>How it works</h2>
+    <p class="sub">Two-minute walkthrough — from install to your first MCP tunnel.</p>
+    <div class="video-wrap">
+      <div class="ratio-16x9">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1"
+          title="MCP Gateway walkthrough"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="section">
+    <h2>What's inside</h2>
+    <p class="sub">Everything you need to run tunnels in production.</p>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="feature">
+          <div class="icon-box"><i class="bi bi-plug"></i></div>
+          <h3>MCP-ready URL</h3>
+          <p>Get a stable HTTPS endpoint for your MCP server. Paste it into Claude Desktop, Cursor, or any MCP-compatible client — it just works.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <div class="icon-box"><i class="bi bi-lightning-charge"></i></div>
+          <h3>Zero config</h3>
+          <p>One CLI command and your local MCP server is reachable from the internet. No port-forwarding, no DNS, no TLS certs.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <div class="icon-box"><i class="bi bi-shield-lock"></i></div>
+          <h3>Private by default</h3>
+          <p>Every tunnel is keyed to your account. API keys and role-based access keep your MCP tools away from strangers.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <div class="icon-box"><i class="bi bi-journal-text"></i></div>
+          <h3>Full request logs</h3>
+          <p>Inspect every MCP call — method, path, payload, status, latency. Perfect for debugging agent behaviour.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <div class="icon-box"><i class="bi bi-speedometer2"></i></div>
+          <h3>Live dashboard</h3>
+          <p>Watch active tunnels, connections, and request volume in real time. Auto-refresh when you need it.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature">
+          <div class="icon-box"><i class="bi bi-arrow-repeat"></i></div>
+          <h3>Sticky endpoints</h3>
+          <p>Reconnect and keep the same public URL. Your agents never lose the tool they were wired up to.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="install" class="section">
+    <h2>Install</h2>
+    <p class="sub">Requires <strong>Node.js 18+</strong>. Pick your OS.</p>
+
+    <div class="os-tabs" role="tablist">
+      <button type="button" class="active" data-os="mac"><i class="bi bi-apple"></i> macOS</button>
+      <button type="button" data-os="linux"><i class="bi bi-ubuntu"></i> Linux</button>
+      <button type="button" data-os="win"><i class="bi bi-windows"></i> Windows</button>
+    </div>
+
+    <div class="os-panel active" data-os="mac">
+      <pre class="code-block"><span class="c-dim"># Install Node.js (if needed) via Homebrew</span>
+<span class="c-brand">$</span> brew install node
+
+<span class="c-dim"># Install the CLI globally</span>
+<span class="c-brand">$</span> npm install -g @alexdive/mcp-gw
+
+<span class="c-dim"># Verify</span>
+<span class="c-brand">$</span> mcp-gw</pre>
+    </div>
+
+    <div class="os-panel" data-os="linux">
+      <pre class="code-block"><span class="c-dim"># Install Node.js (Debian/Ubuntu)</span>
+<span class="c-brand">$</span> curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+<span class="c-brand">$</span> sudo apt-get install -y nodejs
+
+<span class="c-dim"># Install the CLI globally</span>
+<span class="c-brand">$</span> sudo npm install -g @alexdive/mcp-gw
+
+<span class="c-dim"># Verify</span>
+<span class="c-brand">$</span> mcp-gw</pre>
+    </div>
+
+    <div class="os-panel" data-os="win">
+      <pre class="code-block"><span class="c-dim"># Install Node.js via winget (PowerShell)</span>
+<span class="c-brand">&gt;</span> winget install OpenJS.NodeJS.LTS
+
+<span class="c-dim"># Install the CLI globally</span>
+<span class="c-brand">&gt;</span> npm install -g @alexdive/mcp-gw
+
+<span class="c-dim"># Verify</span>
+<span class="c-brand">&gt;</span> mcp-gw</pre>
+    </div>
+  </section>
+
+  <section id="quickstart" class="section">
+    <h2>Quickstart</h2>
+    <p class="sub">Three commands between you and a public MCP endpoint.</p>
+    <pre class="code-block"><span class="c-dim"># 1. Start your local MCP server (any framework / supergateway / etc.)</span>
+<span class="c-brand">$</span> your-mcp-server --port 8080
+
+<span class="c-dim"># 2. Open the tunnel — first run registers an account automatically</span>
+<span class="c-brand">$</span> mcp-gw create --target http://localhost:8080
+
+<span class="c-dim"># 3. Copy the printed public URL into Claude / Cursor / any MCP client</span></pre>
+  </section>
+
+  <footer class="landing-footer">
+    MCP Gateway &middot; self-hosted &middot; <a href="#" id="footerLoginBtn" class="text-decoration-none">Sign in</a>
+  </footer>
+</div>
+
 <!-- LOGIN -->
-<div id="loginView" class="login-wrap">
+<div id="loginView" class="login-wrap d-none">
   <div class="login-card">
     <div class="logo"><i class="bi bi-hdd-network"></i></div>
     <h4 class="mb-1">MCP Gateway</h4>
@@ -110,6 +329,7 @@
     </div>
     <div id="loginError" class="alert alert-danger py-2 px-3 small d-none"></div>
     <button id="loginBtn" class="btn btn-primary w-100">Sign in</button>
+    <button id="backToLanding" class="btn btn-ghost btn-sm w-100 mt-2"><i class="bi bi-arrow-left me-1"></i> Back</button>
   </div>
 </div>
 
@@ -275,12 +495,21 @@ async function api(path) {
   return res.json();
 }
 
-function showLogin() {
-  $('#loginView').classList.remove('d-none');
+function showLanding() {
+  $('#landingView').classList.remove('d-none');
+  $('#loginView').classList.add('d-none');
   $('#appView').classList.add('d-none');
   stopAutoRefresh();
 }
+function showLogin() {
+  $('#landingView').classList.add('d-none');
+  $('#loginView').classList.remove('d-none');
+  $('#appView').classList.add('d-none');
+  stopAutoRefresh();
+  setTimeout(() => $('#loginUser')?.focus(), 50);
+}
 function showApp() {
+  $('#landingView').classList.add('d-none');
   $('#loginView').classList.add('d-none');
   $('#appView').classList.remove('d-none');
   const roleBadge = state.role === 'ADMIN'
@@ -576,7 +805,20 @@ $('#logout').addEventListener('click', () => {
 $('#refresh').addEventListener('click', render);
 $('#autoRefresh').addEventListener('change', (e) => { e.target.checked ? startAutoRefresh() : stopAutoRefresh(); });
 
-if (state.token) showApp(); else showLogin();
+document.querySelectorAll('.os-tabs button').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const os = btn.dataset.os;
+    document.querySelectorAll('.os-tabs button').forEach((b) => b.classList.toggle('active', b.dataset.os === os));
+    document.querySelectorAll('.os-panel').forEach((p) => p.classList.toggle('active', p.dataset.os === os));
+  });
+});
+
+['navLoginBtn', 'heroLoginBtn', 'footerLoginBtn'].forEach((id) => {
+  $(`#${id}`)?.addEventListener('click', (e) => { e.preventDefault(); showLogin(); });
+});
+$('#backToLanding')?.addEventListener('click', showLanding);
+
+if (state.token) showApp(); else showLanding();
 </script>
 </body>
 </html>
