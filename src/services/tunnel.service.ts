@@ -186,6 +186,8 @@ export class TunnelService {
     private extractTunnelId(host: string | undefined): string | null {
         if (!host) return null;
         const hostname = host.split(':')[0]!;
+        const rootDomain = process.env.ROOT_DOMAIN;
+        if (rootDomain && hostname === rootDomain) return null;
         const parts = hostname.split('.');
         if (parts.length < 2) return null;
         return parts[0] || null;

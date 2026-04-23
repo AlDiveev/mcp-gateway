@@ -20,12 +20,13 @@ export class TunnelController {
   }
 
   private buildWsUrl(id: string): string {
-    return this.withSubdomain(config.wsPublicUrl, id);
+    return this.withSubdomain(config.wsPublicUrl, id, config.wsPath);
   }
 
-  private withSubdomain(base: string, id: string): string {
+  private withSubdomain(base: string, id: string, pathname?: string): string {
     const url = new URL(base);
     url.hostname = `${id}.${url.hostname}`;
+    if (pathname) url.pathname = pathname;
     return url.toString();
   }
 

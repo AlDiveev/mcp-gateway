@@ -21,7 +21,7 @@ export class MeController {
       const withUrls = tunnels.map((t) => ({
         ...t,
         publicUrl: this.withSubdomain(config.publicUrl, t.id),
-        wsUrl: this.withSubdomain(config.wsPublicUrl, t.id) + `?token=${encodeURIComponent(t.authToken)}`,
+        wsUrl: this.withSubdomain(config.wsPublicUrl, t.id, config.wsPath) + `?token=${encodeURIComponent(t.authToken)}`,
       }));
       res.json(withUrls);
     } catch (err) {
@@ -44,9 +44,10 @@ export class MeController {
     }
   };
 
-  private withSubdomain(base: string, id: string): string {
+  private withSubdomain(base: string, id: string, pathname?: string): string {
     const url = new URL(base);
     url.hostname = `${id}.${url.hostname}`;
+    if (pathname) url.pathname = pathname;
     return url.toString();
   }
 }
