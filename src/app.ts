@@ -86,6 +86,7 @@ export function createApp(deps: AppDependencies): Express {
   app.get('/healthz', (_req, res) => res.json({ status: 'ok' }));
 
   app.use('/admin', express.static(path.join(process.cwd(), 'public', 'admin')));
+  app.use(express.static(path.join(process.cwd(), 'public', 'admin')));
 
   app.post('/api/auth/register', deps.authController.register);
   app.post('/api/auth/login', deps.authController.login);
