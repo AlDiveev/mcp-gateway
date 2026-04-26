@@ -85,8 +85,15 @@ export function createApp(deps: AppDependencies): Express {
 
   app.get('/healthz', (_req, res) => res.json({ status: 'ok' }));
 
-  app.use('/admin', express.static(path.join(process.cwd(), 'public', 'admin')));
-  app.use(express.static(path.join(process.cwd(), 'public', 'admin')));
+  const setPromptHeaders = (res: Response, filePath: string) => {
+    if (filePath.endsWith('.prompt') || filePath.endsWith('llms.txt')) {
+      res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=300');
+    }
+  };
+  app.use('/admin', express.static(path.join(process.cwd(), 'public', 'admin'), { setHeaders: setPromptHeaders }));
+  app.use('/docs', express.static(path.join(process.cwd(), 'public', 'docs')));
+  app.use(express.static(path.join(process.cwd(), 'public', 'admin'), { setHeaders: setPromptHeaders }));
 
   app.post('/api/auth/register', deps.authController.register);
   app.post('/api/auth/login', deps.authController.login);

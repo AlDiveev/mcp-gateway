@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
+    "docs:install": "cd docs && npm install",
+    "docs:dev": "cd docs && npm start",
+    "docs:build": "cd docs && npm run build && rm -rf ../public/docs && mkdir -p ../public/docs && cp -r build/. ../public/docs/",
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
